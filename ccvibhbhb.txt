@@ -143,6 +143,12 @@
             box-shadow: 0 4px 15px rgba(25, 25, 112, 0.4);
             cursor: pointer;
             z-index: 1000;
+            transition: all 0.2s ease;
+        }
+
+        .fab-btn:hover {
+            background-color: #121250;
+            transform: scale(1.05);
         }
 
         .result-container {
@@ -161,6 +167,8 @@
             border-radius: 6px;
             border: 1px solid #E0E0E0;
             font-size: 14px;
+            line-height: 1.5;
+            color: #333;
         }
     </style>
 </head>
@@ -170,9 +178,10 @@
         <div class="header-box">
             <h1>Derma Sentry Check</h1>
             <div class="subtitle">ระบบบันทึกวิเคราะห์ความผิดปกติของผิวหนังและการจัดการยาข้อมูลสุขภาพ</div>
+        }
         </div>
 
-        <form id="medDermaForm">
+        <form id="medDermaForm" onsubmit="event.preventDefault();">
             <div class="section-title">📊 ข้อมูลสุขภาพพื้นฐาน</div>
             
             <div class="form-group">
@@ -231,52 +240,60 @@
             <button type="button" class="fab-btn" onclick="processData()">ประเมินอาการ</button>
 
             <div class="result-container" id="resultArea">
-                <label style="color:#191970; font-size:16px;">📋 พร้อมพ์ที่พร้อมส่งเข้าระบบ n8n & Supabase</label>
+                <label style="color:#191970; font-size:16px; font-weight: bold; margin-bottom: 10px;">📋 ตัวอย่างพร้อมพ์ข้อความที่จะใช้ส่งเข้าระบบ (Mockup View)</label>
                 <pre id="promptOutput"></pre>
             </div>
         </form>
     </div>
 
     <script>
+        // ฟังก์ชันอัปเดตชื่อไฟล์เมื่อเลือกรูปภาพ
         document.getElementById('image_file').addEventListener('change', function(e) {
             if (e.target.files[0]) {
                 document.getElementById('file-name-display').innerText = "เลือกไฟล์แล้ว: " + e.target.files[0].name;
             }
         });
 
+        // ฟังก์ชันประมวลผลเพื่อแสดงผลบนหน้าจอเท่านั้น (ไม่ส่งไปที่ไหน)
         function processData() {
-            let prompt = "ข้อมูลวิเคราะห์เพื่อบันทึกลงระบบฐานข้อมูล:\n\n";
+            let prompt = "=== [ข้อมูลจำลองเพื่อบันทึกลงระบบฐานข้อมูล] ===\n\n";
+            let hasData = false;
             
-            // ดึงค่ามาเช็ค ถ้าว่างให้ข้ามตามกฎ
             const age = document.getElementById('age').value;
-            if(age) prompt += `- อายุ: ${age} ปี\n`;
+            if(age) { prompt += `- อายุ: ${age} ปี\n`; hasData = true; }
             
             const gender = document.querySelector('input[name="gender"]:checked');
-            if(gender) prompt += `- เพศ: ${gender.value}\n`;
+            if(gender) { prompt += `- เพศ: ${gender.value}\n`; hasData = true; }
 
             const weight = document.getElementById('weight').value;
-            if(weight) prompt += `- น้ำหนัก: ${weight} kg\n`;
+            if(weight) { prompt += `- น้ำหนัก: ${weight} kg\n`; hasData = true; }
 
             const height = document.getElementById('height').value;
-            if(height) prompt += `- ส่วนสูง: ${height} cm\n`;
+            if(height) { prompt += `- ส่วนสูง: ${height} cm\n`; hasData = true; }
 
             const underlying = document.getElementById('underlying').value.trim();
-            if(underlying) prompt += `- โรคประจำตัว: ${underlying}\n`;
+            if(underlying) { prompt += `- โรคประจำตัว: ${underlying}\n`; hasData = true; }
 
             const symptoms = document.getElementById('symptoms').value.trim();
-            if(symptoms) prompt += `- อาการผิวหนัง: ${symptoms}\n`;
+            if(symptoms) { prompt += `- อาการผิวหนัง: ${symptoms}\n`; hasData = true; }
 
             const dist = document.querySelector('input[name="distribution"]:checked');
-            if(dist) prompt += `- ลักษณะผื่น: ${dist.value}\n`;
+            if(dist) { prompt += `- ลักษณะผื่น: ${dist.value}\n`; hasData = true; }
 
             const sleep = document.querySelector('input[name="sleep"]:checked');
-            if(sleep) prompt += `- การนอนหลับ: ${sleep.value}\n`;
+            if(sleep) { prompt += `- การนอนหลับ: ${sleep.value}\n`; hasData = true; }
 
             const file = document.getElementById('image_file').files[0];
             if(file) {
-                prompt += `\n[รูปภาพความผิดปกติที่ปรากฎบนผิวหนัง]\n- แนบไฟล์สำเร็จเพื่อเตรียมส่งไปคัดกรองตัวยาใน Supabase`;
+                prompt += `\n[รูปภาพแนบ]\n- ชื่อไฟล์: ${file.name} (พร้อมส่งไปคัดกรองตัวยาใน Supabase)\n`;
+                hasData = true;
             }
 
+            if(!hasData) {
+                prompt += "(ยังไม่มีการกรอกข้อมูลใดๆ กรุณากรอกข้อมูลในฟอร์มเพื่อทดสอบระบบ)";
+            }
+
+            // แสดงกล่องผลลัพธ์และเลื่อนหน้าจอลงมาให้เห็น
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultArea').style.display = 'block';
             document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
