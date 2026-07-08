@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derma & Med Sentry Check</title>
+    <style>
+        /* 60% Dominant Color: #F5F5F5 */
+        /* 30% Secondary Color: #FAFAFA */
+        /* 10% Accent Color: #191970 */
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #F5F5F5;
+            color: #333333;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background-color: #FAFAFA;
+            border: 1px solid #E0E0E0;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        .header-box {
+            border: 2px solid #191970;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 35px;
+            background-color: #FAFAFA;
+        }
+
+        h1 {
+            color: #191970;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #555555;
+            font-size: 15px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #191970;
+            margin: 20px 0 10px 0;
+            padding-left: 8px;
+            border-left: 4px solid #191970;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #E0E0E0;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #191970;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px 14px;
+            background-color: #F5F5F5;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #191970;
+            background-color: #FFF;
+        }
+
+        .options-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: #191970;
+            width: 16px;
+            height: 16px;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #F5F5F5;
+            border: 1px dashed #191970;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #191970;
+        }
+        
+        input[type="file"] { display: none; }
+        #file-name-display { margin-top: 8px; font-size: 12px; color: #666; display: block; }
+
+        .fab-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #191970;
+            color: #FAFAFA;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(25, 25, 112, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            background-color: #F5F5F5;
+            border: 1px solid #191970;
+            border-radius: 8px;
+            padding: 20px;
+            display: none;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            background: #FFF;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #E0E0E0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-box">
+            <h1>Derma Sentry Check</h1>
+            <div class="subtitle">ระบบบันทึกวิเคราะห์ความผิดปกติของผิวหนังและการจัดการยาข้อมูลสุขภาพ</div>
+        </div>
+
+        <form id="medDermaForm">
+            <div class="section-title">📊 ข้อมูลสุขภาพพื้นฐาน</div>
+            
+            <div class="form-group">
+                <label>อายุ (ปี)</label>
+                <input type="number" id="age" min="0" placeholder="เช่น 25">
+            </div>
+            <div class="form-group">
+                <label>เพศ</label>
+                <div class="options-group">
+                    <label class="option-item"><input type="radio" name="gender" value="เพศชาย"> เพศชาย</label>
+                    <label class="option-item"><input type="radio" name="gender" value="เพศหญิง"> เพศหญิง</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>น้ำหนัก (kg)</label>
+                <input type="number" id="weight" min="0" placeholder="เช่น 65">
+            </div>
+            <div class="form-group">
+                <label>ส่วนสูง (cm)</label>
+                <input type="number" id="height" min="0" placeholder="เช่น 170">
+            </div>
+            <div class="form-group">
+                <label>โรคประจำตัว / ยาที่ต้องทานเป็นประจำ</label>
+                <input type="text" id="underlying" placeholder="เช่น ไม่มี, ความดันโลหิตสูง">
+            </div>
+
+            <div class="section-title">🩺 ข้อมูลวิเคราะห์ผิวหนัง</div>
+            
+            <div class="form-group">
+                <label>อาการที่รู้สึก (คัน/แสบ/เจ็บ)</label>
+                <input type="text" id="symptoms" placeholder="ระบุสั้นๆ เป็นข้อๆ">
+            </div>
+            <div class="form-group">
+                <label>ลักษณะการกระจายตัว</label>
+                <div class="options-group">
+                    <label class="option-item"><input type="radio" name="distribution" value="กระจายตัว"> กระจายตัว</label>
+                    <label class="option-item"><input type="radio" name="distribution" value="กระจุกตัว"> กระจุกตัว</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>เวลาที่ใช้ในการนอนหลับพักผ่อน</label>
+                <div class="options-group">
+                    <label class="option-item"><input type="radio" name="sleep" value="1-3 ชั่วโมง"> 1-3 ชั่วโมง</label>
+                    <label class="option-item"><input type="radio" name="sleep" value="4-6 ชั่วโมง"> 4-6 ชั่วโมง</label>
+                    <label class="option-item"><input type="radio" name="sleep" value="7-9 ชั่วโมง"> 7-9 ชั่วโมง</label>
+                </div>
+            </div>
+
+            <div class="section-title">📸 รูปภาพความผิดปกติที่ปรากฎบนผิวหนัง / รูปแผงยา</div>
+            <div class="form-group">
+                <label class="file-label" for="image_file">📸 ถ่ายรูปภาพ หรือ เลือกไฟล์</label>
+                <input type="file" id="image_file" accept="image/*">
+                <span id="file-name-display">ยังไม่ได้เลือกไฟล์</span>
+            </div>
+
+            <button type="button" class="fab-btn" onclick="processData()">ประเมินอาการ</button>
+
+            <div class="result-container" id="resultArea">
+                <label style="color:#191970; font-size:16px;">📋 พร้อมพ์ที่พร้อมส่งเข้าระบบ n8n & Supabase</label>
+                <pre id="promptOutput"></pre>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('image_file').addEventListener('change', function(e) {
+            if (e.target.files[0]) {
+                document.getElementById('file-name-display').innerText = "เลือกไฟล์แล้ว: " + e.target.files[0].name;
+            }
+        });
+
+        function processData() {
+            let prompt = "ข้อมูลวิเคราะห์เพื่อบันทึกลงระบบฐานข้อมูล:\n\n";
+            
+            // ดึงค่ามาเช็ค ถ้าว่างให้ข้ามตามกฎ
+            const age = document.getElementById('age').value;
+            if(age) prompt += `- อายุ: ${age} ปี\n`;
+            
+            const gender = document.querySelector('input[name="gender"]:checked');
+            if(gender) prompt += `- เพศ: ${gender.value}\n`;
+
+            const weight = document.getElementById('weight').value;
+            if(weight) prompt += `- น้ำหนัก: ${weight} kg\n`;
+
+            const height = document.getElementById('height').value;
+            if(height) prompt += `- ส่วนสูง: ${height} cm\n`;
+
+            const underlying = document.getElementById('underlying').value.trim();
+            if(underlying) prompt += `- โรคประจำตัว: ${underlying}\n`;
+
+            const symptoms = document.getElementById('symptoms').value.trim();
+            if(symptoms) prompt += `- อาการผิวหนัง: ${symptoms}\n`;
+
+            const dist = document.querySelector('input[name="distribution"]:checked');
+            if(dist) prompt += `- ลักษณะผื่น: ${dist.value}\n`;
+
+            const sleep = document.querySelector('input[name="sleep"]:checked');
+            if(sleep) prompt += `- การนอนหลับ: ${sleep.value}\n`;
+
+            const file = document.getElementById('image_file').files[0];
+            if(file) {
+                prompt += `\n[รูปภาพความผิดปกติที่ปรากฎบนผิวหนัง]\n- แนบไฟล์สำเร็จเพื่อเตรียมส่งไปคัดกรองตัวยาใน Supabase`;
+            }
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultArea').style.display = 'block';
+            document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
